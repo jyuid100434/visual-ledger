@@ -1,37 +1,36 @@
 /* ============================================================
-   비주얼 가계부 - 다크 모드 스타일시트
+   비주얼 가계부 - 라이트 모드 스타일시트
    ============================================================
    색상 체계:
-   - 배경: 진한 남색 계열 (#0f0f1a ~ #1a1a2e)
-   - 카드/패널: 반투명 유리 효과 (glassmorphism)
-   - 수입: 에메랄드 그린 (#00d4aa)
-   - 지출: 코랄 핑크 (#ff6b6b)
-   - 잔액: 로열 퍼플 (#a78bfa)
-   - 강조: 골드 (#ffd700)
+   - 배경: 연한 그레이 (#F5F5F7)
+   - 카드/패널: 화이트 + 소프트 섀도우
+   - 수입: 민트 그린 (#10B981)
+   - 지출: 로즈 핑크 (#F43F5E)
+   - 잔액/강조: 퍼플 (#6C5CE7)
    ============================================================ */
 
 /* ---------- CSS 변수 (디자인 토큰) ---------- */
-/* 색상을 한 곳에서 관리하면 나중에 테마 변경이 쉬움 */
 :root {
-    --bg-primary: #0a0a14;
-    --bg-secondary: #12121f;
-    --bg-card: rgba(255, 255, 255, 0.04);
-    --bg-card-hover: rgba(255, 255, 255, 0.07);
-    --border-color: rgba(255, 255, 255, 0.08);
-    --text-primary: #e8e8f0;
-    --text-secondary: #8888a0;
-    --text-muted: #555570;
-    --income-color: #00d4aa;
-    --income-bg: rgba(0, 212, 170, 0.1);
-    --expense-color: #ff6b6b;
-    --expense-bg: rgba(255, 107, 107, 0.1);
-    --balance-color: #a78bfa;
-    --balance-bg: rgba(167, 139, 250, 0.1);
-    --accent: #6c5ce7;
-    --accent-hover: #7c6cf7;
+    --bg-primary: #F5F5F7;
+    --bg-secondary: #EEEEF0;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F9F9FB;
+    --border-color: rgba(0, 0, 0, 0.06);
+    --text-primary: #1A1A2E;
+    --text-secondary: #6B7280;
+    --text-muted: #9CA3AF;
+    --income-color: #10B981;
+    --income-bg: rgba(16, 185, 129, 0.08);
+    --expense-color: #F43F5E;
+    --expense-bg: rgba(244, 63, 94, 0.07);
+    --balance-color: #6C5CE7;
+    --balance-bg: rgba(108, 92, 231, 0.07);
+    --accent: #6C5CE7;
+    --accent-hover: #5B4BD6;
     --radius: 16px;
     --radius-sm: 10px;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
     --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -48,10 +47,6 @@ body {
     color: var(--text-primary);
     min-height: 100vh;
     line-height: 1.6;
-    /* 배경에 미묘한 그라데이션 오버레이를 추가하여 입체감 부여 */
-    background-image:
-        radial-gradient(ellipse at 20% 0%, rgba(108, 92, 231, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 100%, rgba(0, 212, 170, 0.05) 0%, transparent 50%);
 }
 
 /* ---------- 헤더 ---------- */
@@ -63,11 +58,7 @@ body {
 .app-header h1 {
     font-size: 2.2rem;
     font-weight: 700;
-    /* 텍스트에 그라데이션 효과 적용 */
-    background: linear-gradient(135deg, #e8e8f0, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text-primary);
 }
 
 .subtitle {
@@ -92,7 +83,7 @@ body {
     padding: 7px 14px;
     border-radius: 20px;
     border: 1px solid var(--border-color);
-    background: rgba(255,255,255,0.04);
+    background: var(--bg-card);
     color: var(--text-secondary);
     font-size: 0.8rem;
     font-family: 'Noto Sans KR', sans-serif;
@@ -100,12 +91,13 @@ body {
     cursor: pointer;
     transition: all 0.2s;
     text-decoration: none;
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-backup:hover {
     border-color: var(--accent);
     color: var(--accent);
-    background: rgba(108, 92, 231, 0.08);
+    background: rgba(108, 92, 231, 0.04);
 }
 
 .btn-import {
@@ -115,8 +107,8 @@ body {
 .backup-warning {
     margin-top: 10px;
     font-size: 0.78rem;
-    color: #e17055;
-    opacity: 0.85;
+    color: #E17055;
+    opacity: 0.9;
 }
 
 /* ---------- 컨테이너 (최대 너비 제한) ---------- */
@@ -143,13 +135,10 @@ body {
     padding: 24px;
     text-align: center;
     transition: var(--transition);
-    /* 글래스모피즘: 배경 블러 효과 */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-sm);
 }
 
 .card:hover {
-    background: var(--bg-card-hover);
     transform: translateY(-2px);
     box-shadow: var(--shadow);
 }
@@ -207,8 +196,7 @@ body {
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     padding: 28px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-sm);
 }
 
 .panel-title {
@@ -222,7 +210,6 @@ body {
    입력 폼 스타일
    ============================================================ */
 
-/* 폼 그룹: 라벨 + 입력 필드를 세로로 배치 */
 .form-group {
     margin-bottom: 18px;
 }
@@ -260,14 +247,12 @@ body {
     transition: var(--transition);
 }
 
-/* 지출 버튼이 활성화된 상태 */
 .toggle-btn.active[data-type="expense"] {
     background: var(--expense-bg);
     color: var(--expense-color);
     border-color: var(--expense-color);
 }
 
-/* 수입 버튼이 활성화된 상태 */
 .toggle-btn.active[data-type="income"] {
     background: var(--income-bg);
     color: var(--income-color);
@@ -281,7 +266,7 @@ input[type="date"],
 select {
     width: 100%;
     padding: 11px 14px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
@@ -294,10 +279,10 @@ select {
 input:focus,
 select:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
 }
 
-/* 금액 입력 필드 뒤에 '원' 표시를 붙이기 위한 래퍼 */
+/* 금액 입력 필드 뒤에 '원' 표시 */
 .input-wrapper {
     position: relative;
 }
@@ -324,24 +309,23 @@ select:focus {
     padding-left: 2px;
     font-size: 0.78rem;
     color: var(--accent);
-    opacity: 0.85;
+    opacity: 0.9;
     transition: opacity var(--transition);
 }
 
-/* select 드롭다운의 화살표 커스텀 */
+/* select 드롭다운 화살표 */
 select {
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238888a0' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239CA3AF' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
     padding-right: 36px;
     cursor: pointer;
 }
 
-/* date 입력 필드의 아이콘 색상 조정 (크롬 전용) */
+/* date 입력 필드 아이콘 */
 input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.6);
     cursor: pointer;
 }
 
@@ -349,7 +333,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .btn-submit {
     width: 100%;
     padding: 13px;
-    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    background: var(--accent);
     border: none;
     border-radius: var(--radius-sm);
     color: #fff;
@@ -362,9 +346,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .btn-submit:hover {
-    background: linear-gradient(135deg, var(--accent-hover), #9b6cf6);
+    background: var(--accent-hover);
     transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(108, 92, 231, 0.35);
+    box-shadow: 0 4px 16px rgba(108, 92, 231, 0.25);
 }
 
 .btn-submit:active {
@@ -388,7 +372,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     position: absolute;
 }
 
-/* 차트가 존재할 때 빈 메시지 숨기기 (JS에서 hidden 클래스 토글) */
 .chart-empty.hidden {
     display: none;
 }
@@ -397,7 +380,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    거래 내역 리스트
    ============================================================ */
 
-/* --- 상단 툴바: 뷰 모드 탭 + 기간 선택 + 필터 --- */
 .list-toolbar {
     display: flex;
     justify-content: space-between;
@@ -411,7 +393,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .view-tabs {
     display: flex;
     gap: 4px;
-    background: rgba(255,255,255,0.03);
+    background: var(--bg-primary);
     border-radius: var(--radius-sm);
     padding: 3px;
 }
@@ -432,11 +414,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .view-tab.active {
     background: var(--accent);
     color: #fff;
+    box-shadow: var(--shadow-sm);
 }
 
 .view-tab:not(.active):hover {
     color: var(--text-secondary);
-    background: rgba(255,255,255,0.05);
+    background: var(--bg-secondary);
 }
 
 /* 필터 영역 */
@@ -447,7 +430,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     flex-wrap: wrap;
 }
 
-/* --- 일별 필터: 화살표 + 날짜 picker --- */
+/* --- 일별/월별 필터 --- */
 .filter-daily,
 .filter-monthly {
     display: flex;
@@ -455,7 +438,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     gap: 4px;
 }
 
-/* hidden 클래스로 뷰 모드에 따라 보이기/숨기기 */
 .filter-daily.hidden,
 .filter-monthly.hidden,
 .filter-yearly.hidden {
@@ -468,7 +450,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     gap: 4px;
 }
 
-/* 년도 텍스트 라벨 (버튼이 아닌 span) */
 .year-label {
     padding: 7px 16px;
     font-size: 0.85rem;
@@ -483,13 +464,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 0.82rem;
 }
 
-/* 좌우 화살표 버튼 (일별, 월별 공용) */
+/* 좌우 화살표 버튼 */
 .nav-arrow {
     width: 32px;
     height: 34px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    background: transparent;
+    background: var(--bg-card);
     color: var(--text-secondary);
     font-size: 1.2rem;
     line-height: 1;
@@ -498,12 +479,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: var(--shadow-sm);
 }
 
 .nav-arrow:hover {
-    background: rgba(108, 92, 231, 0.1);
+    background: var(--accent);
     border-color: var(--accent);
-    color: var(--accent);
+    color: #fff;
 }
 
 /* --- 월별 필터: ← 2026년 3월 → --- */
@@ -511,7 +493,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 7px 16px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    background: transparent;
+    background: var(--bg-card);
     color: var(--text-primary);
     font-family: inherit;
     font-size: 0.85rem;
@@ -519,22 +501,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
     transition: var(--transition);
     white-space: nowrap;
+    box-shadow: var(--shadow-sm);
 }
 
 .month-label:hover {
-    background: rgba(108, 92, 231, 0.08);
     border-color: var(--accent);
+    color: var(--accent);
 }
 
-/* --- 월 선택 드롭다운 (month-label 클릭 시 표시) --- */
+/* --- 월 선택 드롭다운 --- */
 .month-dropdown {
     display: none;
     position: fixed;
     z-index: 2000;
-    background: #1a1a30;
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
     padding: 12px;
     width: 260px;
 }
@@ -557,7 +540,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: var(--text-primary);
 }
 
-/* 월 그리드: 4열 3행 = 12개월 */
 .month-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -577,7 +559,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .month-grid-btn:hover {
-    background: rgba(108, 92, 231, 0.1);
+    background: rgba(108, 92, 231, 0.06);
     color: var(--text-primary);
 }
 
@@ -597,14 +579,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 0.82rem;
 }
 
-/* --- 날짜 그룹 헤더 (일별/월별 보기에서 사용) --- */
+/* --- 날짜 그룹 헤더 --- */
 .date-group-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 16px 6px;
     margin-top: 8px;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid var(--border-color);
 }
 
 .date-group-header:first-child {
@@ -629,7 +611,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* --- 년도별 요약 카드 --- */
 .year-summary {
     padding: 20px 16px;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid var(--border-color);
 }
 
 .year-summary:first-child {
@@ -651,7 +633,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .year-stat {
-    background: rgba(255,255,255,0.03);
+    background: var(--bg-primary);
     border-radius: var(--radius-sm);
     padding: 14px;
     text-align: center;
@@ -674,7 +656,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .year-stat-value.balance { color: var(--balance-color); }
 
 .year-insight {
-    background: rgba(108, 92, 231, 0.06);
+    background: rgba(108, 92, 231, 0.04);
     border-left: 3px solid var(--accent);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     padding: 12px 14px;
@@ -691,11 +673,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: var(--text-primary);
 }
 
-/* 전체 삭제 버튼: 위험한 동작이므로 빨간색 강조 */
+/* 전체 삭제 버튼 */
 .btn-clear {
     padding: 7px 14px;
     background: transparent;
-    border: 1px solid rgba(255, 107, 107, 0.3);
+    border: 1px solid rgba(244, 63, 94, 0.25);
     border-radius: var(--radius-sm);
     color: var(--expense-color);
     font-family: inherit;
@@ -713,9 +695,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .transaction-list {
     max-height: 480px;
     overflow-y: auto;
-    /* 커스텀 스크롤바 (크롬/엣지 전용) */
     scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.1) transparent;
+    scrollbar-color: rgba(0,0,0,0.08) transparent;
 }
 
 .transaction-list::-webkit-scrollbar {
@@ -723,7 +704,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .transaction-list::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.08);
     border-radius: 3px;
 }
 
@@ -746,14 +727,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 14px 16px;
     border-radius: var(--radius-sm);
     transition: var(--transition);
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .transaction-item:hover {
-    background: var(--bg-card-hover);
+    background: var(--bg-primary);
 }
 
-/* 카테고리 아이콘 원형 배지 */
+/* 카테고리 아이콘 배지 */
 .tx-icon {
     width: 42px;
     height: 42px;
@@ -765,15 +746,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     flex-shrink: 0;
 }
 
-.tx-icon.income {
-    background: var(--income-bg);
-}
+.tx-icon.income { background: var(--income-bg); }
+.tx-icon.expense { background: var(--expense-bg); }
 
-.tx-icon.expense {
-    background: var(--expense-bg);
-}
-
-/* 카테고리명 + 날짜/메모 텍스트 */
 .tx-info {
     flex: 1;
     min-width: 0;
@@ -788,13 +763,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 0.78rem;
     color: var(--text-muted);
     margin-top: 2px;
-    /* 긴 메모가 잘리도록 말줄임 처리 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* 금액 표시 */
 .tx-amount {
     font-weight: 700;
     font-size: 0.95rem;
@@ -827,10 +800,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 /* ============================================================
-   카테고리 관리 버튼 (카테고리 select 옆)
+   카테고리 관리 버튼
    ============================================================ */
 
-/* 카테고리 select와 관리 버튼을 가로로 배치 */
 .category-row {
     display: flex;
     gap: 8px;
@@ -842,7 +814,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     min-width: 0;
 }
 
-/* "관리" 버튼: 작고 심플한 아웃라인 스타일 */
 .btn-category-manage {
     display: flex;
     align-items: center;
@@ -862,19 +833,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .btn-category-manage:hover {
     border-color: var(--accent);
     color: var(--accent);
-    background: rgba(108, 92, 231, 0.08);
+    background: rgba(108, 92, 231, 0.04);
 }
 
 /* ============================================================
    카테고리 관리 모달
    ============================================================ */
 
-/* 모달 뒤의 어두운 배경 오버레이 */
 .modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     z-index: 1000;
@@ -883,14 +853,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 20px;
 }
 
-/* 모달이 열릴 때: flex로 전환하여 중앙 배치 */
 .modal-overlay.open {
     display: flex;
 }
 
-/* 모달 본체 */
 .modal {
-    background: #16162a;
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     width: 100%;
@@ -898,7 +866,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     max-height: 80vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.15);
     animation: modalIn 0.25s ease-out;
 }
 
@@ -907,7 +875,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* --- 모달 헤더 --- */
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -962,12 +929,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .modal-tab.active {
-    background: rgba(108, 92, 231, 0.12);
+    background: rgba(108, 92, 231, 0.08);
     color: var(--accent);
     border-color: var(--accent);
 }
 
-/* --- 추가 폼 위 안내 문구 --- */
 .modal-add-hint {
     font-size: 0.75rem;
     color: var(--text-muted);
@@ -975,7 +941,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     line-height: 1.5;
 }
 
-/* "●" 차트 색상 힌트를 시각적으로 강조 */
 .hint-chart-color {
     color: var(--accent);
     font-size: 0.65rem;
@@ -989,14 +954,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     align-items: center;
 }
 
-/* 이모지 선택 버튼: 클릭하면 이모지 피커가 열리는 버튼 */
 .cat-icon-btn {
     width: 46px;
     min-width: 46px;
     height: 42px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-primary);
     cursor: pointer;
     transition: var(--transition);
     display: flex;
@@ -1007,30 +971,26 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .cat-icon-btn:hover {
     border-color: var(--accent);
-    background: rgba(108, 92, 231, 0.08);
+    background: rgba(108, 92, 231, 0.04);
 }
 
-/* 버튼 안의 이모지 미리보기 (선택 전이면 "+" 표시) */
 .cat-icon-preview {
     font-size: 1.2rem;
     line-height: 1;
     color: var(--text-muted);
 }
 
-/* 이모지가 선택된 상태면 색상 변경 */
 .cat-icon-btn.selected .cat-icon-preview {
     color: var(--text-primary);
     font-size: 1.3rem;
 }
 
-/* 인라인 수정 폼에서 사용되는 이모지 버튼 */
 .cat-edit-row .cat-icon-btn {
     width: 40px;
     min-width: 40px;
     height: 36px;
 }
 
-/* 이모지 입력: 작은 정사각형 (히든 input이므로 이제 표시되지 않지만 편집 폼에서 사용) */
 .cat-icon-input {
     width: 46px !important;
     min-width: 46px;
@@ -1039,20 +999,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 9px 4px !important;
 }
 
-/* 카테고리 이름 입력 */
 .cat-name-input {
     flex: 1;
     min-width: 0;
 }
 
-/* 차트 색상 선택 버튼: 클릭하면 색상 팔레트가 열림 */
+/* 차트 색상 선택 버튼 */
 .cat-color-btn {
     width: 38px;
     min-width: 38px;
     height: 42px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-primary);
     cursor: pointer;
     transition: var(--transition);
     display: flex;
@@ -1063,20 +1022,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .cat-color-btn:hover {
     border-color: var(--accent);
-    background: rgba(108, 92, 231, 0.08);
+    background: rgba(108, 92, 231, 0.04);
 }
 
-/* 버튼 안의 색상 미리보기 원형 점 */
 .cat-color-dot {
     width: 20px;
     height: 20px;
     border-radius: 50%;
     display: block;
-    /* 흰색 테두리로 어두운 색상도 식별 가능하게 */
-    box-shadow: 0 0 0 2px rgba(255,255,255,0.15);
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
 }
 
-/* 인라인 수정 폼 안의 색상 버튼 */
 .cat-edit-row .cat-color-btn {
     height: 36px;
     width: 36px;
@@ -1088,10 +1044,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     height: 18px;
 }
 
-/* 추가 버튼 */
 .btn-add-cat {
     padding: 9px 14px;
-    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    background: var(--accent);
     border: none;
     border-radius: var(--radius-sm);
     color: #fff;
@@ -1104,20 +1059,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .btn-add-cat:hover {
-    box-shadow: 0 2px 12px rgba(108, 92, 231, 0.35);
+    background: var(--accent-hover);
     transform: translateY(-1px);
+    box-shadow: 0 2px 12px rgba(108, 92, 231, 0.25);
 }
 
-/* --- 카테고리 목록 (스크롤 가능) --- */
+/* --- 카테고리 목록 --- */
 .modal-cat-list {
     flex: 1;
     overflow-y: auto;
     padding: 0 24px 20px;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.1) transparent;
+    scrollbar-color: rgba(0,0,0,0.08) transparent;
 }
 
-/* 개별 카테고리 아이템 */
 .cat-item {
     display: flex;
     align-items: center;
@@ -1128,10 +1083,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .cat-item:hover {
-    background: var(--bg-card-hover);
+    background: var(--bg-primary);
 }
 
-/* 카테고리 아이콘 + 색상 원형 표시 */
 .cat-item-icon {
     width: 36px;
     height: 36px;
@@ -1150,17 +1104,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     min-width: 0;
 }
 
-/* 기본 카테고리임을 표시하는 작은 배지 */
 .cat-badge-default {
     font-size: 0.68rem;
     color: var(--text-muted);
-    background: rgba(255,255,255,0.05);
+    background: var(--bg-primary);
     padding: 2px 8px;
     border-radius: 6px;
     white-space: nowrap;
 }
 
-/* 수정/삭제 액션 버튼 그룹 */
 .cat-item-actions {
     display: flex;
     gap: 4px;
@@ -1181,19 +1133,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     justify-content: center;
 }
 
-/* 수정 버튼 호버: 파란색 강조 */
 .cat-action-btn.edit:hover {
-    background: rgba(108, 92, 231, 0.12);
+    background: rgba(108, 92, 231, 0.08);
     color: var(--accent);
 }
 
-/* 삭제 버튼 호버: 빨간색 강조 */
 .cat-action-btn.delete:hover {
     background: var(--expense-bg);
     color: var(--expense-color);
 }
 
-/* 기본 카테고리의 삭제 버튼 비활성화 */
 .cat-action-btn.disabled {
     opacity: 0.2;
     cursor: not-allowed;
@@ -1201,15 +1150,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 /* --- 인라인 수정 모드 --- */
-/* 카테고리 이름을 클릭하여 수정할 때 나타나는 입력 필드 */
 .cat-edit-row {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 8px 12px;
     border-radius: var(--radius-sm);
-    background: rgba(108, 92, 231, 0.06);
-    border: 1px solid rgba(108, 92, 231, 0.2);
+    background: rgba(108, 92, 231, 0.04);
+    border: 1px solid rgba(108, 92, 231, 0.15);
 }
 
 .cat-edit-row input[type="text"] {
@@ -1248,7 +1196,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transition: var(--transition);
 }
 
-/* 저장 버튼 */
 .btn-edit-save {
     background: var(--accent);
     color: #fff;
@@ -1258,7 +1205,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: var(--accent-hover);
 }
 
-/* 취소 버튼 */
 .btn-edit-cancel {
     background: transparent;
     color: var(--text-muted);
@@ -1273,17 +1219,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    이모지 피커 팝업
    ============================================================ */
 
-/* 피커 컨테이너: 고정 위치로 표시, JS에서 좌표를 지정 */
 .emoji-picker {
     display: none;
     position: fixed;
     z-index: 2000;
     width: 320px;
     max-height: 340px;
-    background: #1a1a30;
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
     flex-direction: column;
     overflow: hidden;
 }
@@ -1292,7 +1237,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     display: flex;
 }
 
-/* --- 카테고리 탭 바 --- */
 .emoji-tabs {
     display: flex;
     gap: 2px;
@@ -1319,20 +1263,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .emoji-tab-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--bg-primary);
 }
 
 .emoji-tab-btn.active {
-    background: rgba(108, 92, 231, 0.2);
+    background: rgba(108, 92, 231, 0.1);
 }
 
-/* --- 이모지 그리드 --- */
 .emoji-grid {
     flex: 1;
     overflow-y: auto;
     padding: 8px;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.1) transparent;
+    scrollbar-color: rgba(0,0,0,0.08) transparent;
 }
 
 .emoji-grid::-webkit-scrollbar {
@@ -1340,11 +1283,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .emoji-grid::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.08);
     border-radius: 3px;
 }
 
-/* 카테고리 제목 (그리드 내) */
 .emoji-group-title {
     font-size: 0.72rem;
     color: var(--text-muted);
@@ -1352,14 +1294,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-weight: 500;
 }
 
-/* 이모지 버튼 그리드 레이아웃 */
 .emoji-group-grid {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 2px;
 }
 
-/* 개별 이모지 버튼 */
 .emoji-btn {
     width: 100%;
     aspect-ratio: 1;
@@ -1376,7 +1316,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .emoji-btn:hover {
-    background: rgba(108, 92, 231, 0.2);
+    background: rgba(108, 92, 231, 0.1);
     transform: scale(1.15);
 }
 
@@ -1384,16 +1324,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    색상 팔레트 피커 팝업
    ============================================================ */
 
-/* 팔레트 컨테이너: 이모지 피커와 유사한 고정 위치 팝업 */
 .color-picker {
     display: none;
     position: fixed;
     z-index: 2000;
     width: 240px;
-    background: #1a1a30;
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
     padding: 14px;
     flex-direction: column;
     gap: 10px;
@@ -1404,7 +1343,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     animation: modalIn 0.2s ease-out;
 }
 
-/* 상단 안내 라벨: 이 색상이 차트에 쓰인다는 걸 명확히 전달 */
 .color-picker-label {
     font-size: 0.75rem;
     color: var(--text-secondary);
@@ -1413,14 +1351,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-bottom: 1px solid var(--border-color);
 }
 
-/* 색상 스와치 그리드: 6열 배치 */
 .color-palette {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 6px;
 }
 
-/* 개별 색상 스와치 (원형 버튼) */
 .color-swatch {
     width: 100%;
     aspect-ratio: 1;
@@ -1433,14 +1369,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .color-swatch:hover {
     transform: scale(1.2);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+    border-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 현재 선택된 색상에 체크 표시 효과 */
 .color-swatch.selected {
-    border-color: #fff;
-    box-shadow: 0 0 0 2px var(--accent), 0 0 12px rgba(108, 92, 231, 0.4);
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 2px var(--accent), 0 0 12px rgba(108, 92, 231, 0.2);
 }
 
 /* ============================================================
@@ -1451,7 +1386,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-top: 28px;
 }
 
-/* --- 보고서 헤더: 월 네비게이션 + PDF 내보내기 버튼 --- */
+/* --- 보고서 헤더 --- */
 .report-header {
     display: flex;
     align-items: center;
@@ -1477,7 +1412,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     height: 32px;
     border-radius: 50%;
     border: 1px solid var(--border-color);
-    background: rgba(255,255,255,0.03);
+    background: var(--bg-card);
     color: var(--text-secondary);
     font-size: 1.2rem;
     cursor: pointer;
@@ -1500,7 +1435,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 8px 16px;
     border: 1px solid var(--accent);
     border-radius: var(--radius-sm);
-    background: rgba(108, 92, 231, 0.1);
+    background: rgba(108, 92, 231, 0.06);
     color: var(--accent);
     font-size: 0.82rem;
     font-family: 'Noto Sans KR', sans-serif;
@@ -1532,7 +1467,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .report-card {
-    background: rgba(255,255,255,0.03);
+    background: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     padding: 16px;
@@ -1552,12 +1487,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: var(--text-primary);
 }
 
-/* 증감 표시: 증가(빨강), 감소(초록) */
 .rpt-up { color: var(--expense-color); }
 .rpt-down { color: var(--income-color); }
 .rpt-neutral { color: var(--text-muted); }
 
-/* --- B & D. 차트 2개를 나란히 --- */
+/* --- B & D. 차트 --- */
 .report-charts {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1566,7 +1500,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .report-chart-box {
-    background: rgba(255,255,255,0.02);
+    background: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     padding: 16px;
@@ -1586,26 +1520,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* --- C. 카테고리별 지출 랭킹 --- */
 .report-ranking {
-    background: rgba(255,255,255,0.02);
+    background: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     padding: 16px;
 }
 
-/* 개별 랭킹 아이템 */
 .ranking-item {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .ranking-item:last-child {
     border-bottom: none;
 }
 
-/* 순위 번호 */
 .ranking-rank {
     width: 24px;
     font-size: 0.82rem;
@@ -1615,9 +1547,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     flex-shrink: 0;
 }
 
-.ranking-item:nth-child(1) .ranking-rank { color: #ffd700; }
-.ranking-item:nth-child(2) .ranking-rank { color: #c0c0c0; }
-.ranking-item:nth-child(3) .ranking-rank { color: #cd7f32; }
+.ranking-item:nth-child(1) .ranking-rank { color: #D4A017; }
+.ranking-item:nth-child(2) .ranking-rank { color: #9CA3AF; }
+.ranking-item:nth-child(3) .ranking-rank { color: #B87333; }
 
 .ranking-icon {
     font-size: 1.1rem;
@@ -1635,10 +1567,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-bottom: 4px;
 }
 
-/* 가로 막대 바 (프로그레스 바 스타일) */
 .ranking-bar-bg {
     height: 8px;
-    background: rgba(255,255,255,0.05);
+    background: var(--bg-secondary);
     border-radius: 4px;
     overflow: hidden;
 }
@@ -1663,7 +1594,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-left: 4px;
 }
 
-/* 보고서 데이터 없을 때 */
 .report-empty {
     text-align: center;
     color: var(--text-muted);
@@ -1675,7 +1605,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    반응형 디자인 (모바일 대응)
    ============================================================ */
 
-/* 태블릿 이하: 2열 → 1열 레이아웃 */
 @media (max-width: 768px) {
     .summary-cards {
         grid-template-columns: 1fr;

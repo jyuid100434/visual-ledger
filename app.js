@@ -635,9 +635,9 @@ function updateChart() {
                 data: data,
                 backgroundColor: colors,
                 // 각 조각의 테두리 색상을 배경과 동일하게 하여 깔끔한 느낌
-                borderColor: '#0a0a14',
+                borderColor: '#FFFFFF',
                 borderWidth: 3,
-                hoverBorderColor: '#1a1a2e',
+                hoverBorderColor: '#F5F5F7',
                 hoverBorderWidth: 2,
                 // 조각 사이 간격 (padding)
                 spacing: 2,
@@ -652,7 +652,7 @@ function updateChart() {
                 legend: {
                     position: 'bottom',
                     labels: {
-                        color: '#8888a0',
+                        color: '#6B7280',
                         font: {
                             family: "'Noto Sans KR', sans-serif",
                             size: 12,
@@ -664,9 +664,9 @@ function updateChart() {
                     },
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                    titleColor: '#e8e8f0',
-                    bodyColor: '#e8e8f0',
+                    backgroundColor: 'rgba(26, 26, 46, 0.9)',
+                    titleColor: '#FFFFFF',
+                    bodyColor: '#FFFFFF',
                     padding: 12,
                     cornerRadius: 10,
                     titleFont: {
@@ -839,9 +839,9 @@ function renderDailyBarChart(expenses, year, month) {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                    titleColor: '#e8e8f0',
-                    bodyColor: '#e8e8f0',
+                    backgroundColor: 'rgba(26, 26, 46, 0.9)',
+                    titleColor: '#FFFFFF',
+                    bodyColor: '#FFFFFF',
                     cornerRadius: 8,
                     titleFont: { family: "'Noto Sans KR', sans-serif" },
                     bodyFont: { family: "'Noto Sans KR', sans-serif" },
@@ -855,16 +855,16 @@ function renderDailyBarChart(expenses, year, month) {
                 x: {
                     grid: { display: false },
                     ticks: {
-                        color: '#555570',
+                        color: '#6B7280',
                         font: { size: 10 },
                         // 5일 간격으로만 라벨 표시 (너무 촘촘하지 않게)
                         callback: (val, i) => (i + 1) % 5 === 0 || i === 0 ? i + 1 : '',
                     },
                 },
                 y: {
-                    grid: { color: 'rgba(255,255,255,0.03)' },
+                    grid: { color: 'rgba(0, 0, 0, 0.04)' },
                     ticks: {
-                        color: '#555570',
+                        color: '#6B7280',
                         font: { size: 10 },
                         callback: (val) => val >= 10000 ? (val / 10000) + '만' : val,
                     },
@@ -989,7 +989,7 @@ function renderCompareChart(thisExpenses, lastExpenses, year, month) {
                     position: 'top',
                     align: 'end',
                     labels: {
-                        color: '#8888a0',
+                        color: '#6B7280',
                         font: { family: "'Noto Sans KR', sans-serif", size: 11 },
                         boxWidth: 12,
                         padding: 12,
@@ -997,9 +997,9 @@ function renderCompareChart(thisExpenses, lastExpenses, year, month) {
                     },
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                    titleColor: '#e8e8f0',
-                    bodyColor: '#e8e8f0',
+                    backgroundColor: 'rgba(26, 26, 46, 0.9)',
+                    titleColor: '#FFFFFF',
+                    bodyColor: '#FFFFFF',
                     cornerRadius: 8,
                     titleFont: { family: "'Noto Sans KR', sans-serif" },
                     bodyFont: { family: "'Noto Sans KR', sans-serif" },
@@ -1013,15 +1013,15 @@ function renderCompareChart(thisExpenses, lastExpenses, year, month) {
                 x: {
                     grid: { display: false },
                     ticks: {
-                        color: '#555570',
+                        color: '#6B7280',
                         font: { size: 10 },
                         callback: (val, i) => (i + 1) % 5 === 0 || i === 0 ? i + 1 : '',
                     },
                 },
                 y: {
-                    grid: { color: 'rgba(255,255,255,0.03)' },
+                    grid: { color: 'rgba(0, 0, 0, 0.04)' },
                     ticks: {
-                        color: '#555570',
+                        color: '#6B7280',
                         font: { size: 10 },
                         callback: (val) => val >= 10000 ? (val / 10000) + '만' : val,
                     },
@@ -2213,7 +2213,7 @@ DOM.btnExportPdf.addEventListener('click', async () => {
 
         // html2canvas로 보고서 섹션을 이미지로 캡처
         const canvas = await html2canvas(panel, {
-            backgroundColor: '#0a0a14',  // 다크 배경색
+            backgroundColor: '#F5F5F7',  // 라이트 배경색
             scale: 2,                     // 고해상도 (2배)
             useCORS: true,
             logging: false,
