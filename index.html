@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비주얼 가계부</title>
+
+    <!-- Chart.js CDN: 원형 차트를 그리기 위한 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+    <!-- html2canvas + jsPDF: 지출 보고서를 PDF로 내보내기 위한 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+
+    <!-- 구글 폰트: 한글 지원 폰트 로드 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ==================== 헤더 영역 ==================== -->
+    <header class="app-header">
+        <h1>💰 비주얼 가계부</h1>
+        <p class="subtitle">수입과 지출을 한눈에 관리하세요</p>
+    </header>
+
+    <main class="container">
+
+        <!-- ==================== 요약 카드 영역 ==================== -->
+        <!-- 이번 달 수입, 지출, 잔액 + 전체 누적 잔액 -->
+        <section class="summary-cards">
+            <div class="card card-income">
+                <span class="card-label">이번 달 수입</span>
+                <span class="card-amount" id="total-income">0원</span>
+            </div>
+            <div class="card card-expense">
+                <span class="card-label">이번 달 지출</span>
+                <span class="card-amount" id="total-expense">0원</span>
+            </div>
+            <div class="card card-balance">
+                <span class="card-label">이번 달 잔액</span>
+                <span class="card-amount" id="total-balance">0원</span>
+            </div>
+        </section>
+        <!-- 전체 누적 잔액 한 줄 표시 -->
+        <div class="cumulative-balance">
+            전체 누적 잔액: <span id="cumulative-balance">0원</span>
+        </div>
+
+        <!-- ==================== 메인 콘텐츠: 입력폼 + 차트 ==================== -->
+        <section class="main-content">
+
+            <!-- ---------- 내역 입력 폼 ---------- -->
+            <div class="panel input-panel">
+                <h2 class="panel-title">📝 내역 추가</h2>
+                <form id="transaction-form">
+
+                    <!-- 수입/지출 타입 선택 토글 버튼 -->
+                    <div class="form-group">
+                        <label>유형</label>
+                        <div class="type-toggle">
+                            <button type="button" class="toggle-btn active" data-type="expense">지출</button>
+                            <button type="button" class="toggle-btn" data-type="income">수입</button>
+                        </div>
+                    </div>
+
+                    <!-- 금액 입력 필드 -->
+                    <div class="form-group">
+                        <label for="amount">금액</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="amount" inputmode="numeric" placeholder="금액을 입력하세요" required>
+                            <span class="input-suffix">원</span>
+                        </div>
+                        <!-- 1만원 이상일 때 한글 금액 표시 (예: 1만5천원) -->
+                        <span class="amount-korean" id="amount-korean"></span>
+                    </div>
+
+                    <!-- 카테고리 선택: 수입/지출에 따라 옵션이 달라짐 -->
+                    <div class="form-group">
+                        <label for="category">카테고리</label>
+                        <div class="category-row">
+                            <select id="category" required>
+                                <!-- JavaScript에서 동적으로 옵션을 채움 -->
+                            </select>
+                            <!-- 카테고리 관리 모달을 여는 버튼 -->
+                            <button type="button" class="btn-category-manage" id="btn-category-manage" title="카테고리 관리">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                    <path d="M13.6 5.1l-2.7-2.7c-.4-.4-1-.4-1.4 0L2.7 9.2c-.2.2-.3.4-.3.7v2.8c0 .6.4 1 1 1h2.8c.3 0 .5-.1.7-.3l6.7-6.7c.4-.4.4-1.1 0-1.6zM6.5 12.3H4.3v-2.2l5-5 2.2 2.2-5 5z"/>
+                                </svg>
+                                관리
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 날짜 선택 (기본값: 오늘) -->
+                    <div class="form-group">
+                        <label for="date">날짜</label>
+                        <input type="date" id="date" required>
+                    </div>
+
+                    <!-- 메모 (선택사항) -->
+                    <div class="form-group">
+                        <label for="memo">메모 <span class="optional">(선택)</span></label>
+                        <input type="text" id="memo" placeholder="간단한 메모를 남겨보세요">
+                    </div>
+
+                    <button type="submit" class="btn-submit">추가하기</button>
+                </form>
+            </div>
+
+            <!-- ---------- 카테고리별 지출 원형 차트 ---------- -->
+            <div class="panel chart-panel">
+                <h2 class="panel-title">📊 카테고리별 지출 비율</h2>
+                <div class="chart-container">
+                    <!-- Chart.js가 이 canvas 요소에 차트를 렌더링함 -->
+                    <canvas id="expense-chart"></canvas>
+                    <!-- 데이터가 없을 때 표시할 안내 메시지 -->
+                    <p class="chart-empty" id="chart-empty">아직 지출 내역이 없습니다</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ==================== 거래 내역 리스트 ==================== -->
+        <section class="panel list-panel">
+
+            <!-- 상단 바: 뷰 모드 탭 + 필터들 -->
+            <div class="list-toolbar">
+                <!-- 일별 / 월별 / 년도별 보기 모드 탭 -->
+                <div class="view-tabs">
+                    <button class="view-tab active" data-view="daily">일별</button>
+                    <button class="view-tab" data-view="monthly">월별</button>
+                    <button class="view-tab" data-view="yearly">년도별</button>
+                </div>
+
+                <div class="list-filters">
+                    <!-- 일별 필터: 날짜 하나만 선택 -->
+                    <div class="filter-daily" id="filter-daily">
+                        <button class="nav-arrow" id="day-prev" title="이전 날짜">‹</button>
+                        <input type="date" id="date-pick" title="날짜 선택">
+                        <button class="nav-arrow" id="day-next" title="다음 날짜">›</button>
+                    </div>
+
+                    <!-- 월별 필터: ← 2026년 3월 → 네비게이터 -->
+                    <div class="filter-monthly hidden" id="filter-monthly">
+                        <button class="nav-arrow" id="month-prev" title="이전 달">‹</button>
+                        <button class="month-label" id="month-label" title="월 선택">2026년 3월</button>
+                        <button class="nav-arrow" id="month-next" title="다음 달">›</button>
+                    </div>
+
+                    <!-- 년도별 필터: ← 2026년 → 네비게이터 -->
+                    <div class="filter-yearly hidden" id="filter-yearly">
+                        <button class="nav-arrow" id="year-prev" title="이전 년도">‹</button>
+                        <span class="year-label" id="year-label">2026년</span>
+                        <button class="nav-arrow" id="year-next" title="다음 년도">›</button>
+                    </div>
+
+                    <!-- 수입/지출 필터 -->
+                    <select id="filter-type">
+                        <option value="all">전체</option>
+                        <option value="income">수입만</option>
+                        <option value="expense">지출만</option>
+                    </select>
+                    <button class="btn-clear" id="btn-clear-all">전체 삭제</button>
+                </div>
+            </div>
+
+            <!-- 거래 내역이 여기에 동적으로 추가됨 -->
+            <div class="transaction-list" id="transaction-list">
+                <p class="list-empty" id="list-empty">등록된 거래 내역이 없습니다</p>
+            </div>
+        </section>
+
+        <!-- ==================== 이번 달 지출 보고서 ==================== -->
+        <section class="panel report-panel" id="report-panel">
+            <!-- 보고서 헤더: 월 네비게이션 + PDF 내보내기 버튼 -->
+            <div class="report-header">
+                <div class="report-nav">
+                    <button class="nav-arrow" id="report-prev" title="이전 달">‹</button>
+                    <h2 class="panel-title" id="report-title">📊 이번 달 지출 보고서</h2>
+                    <button class="nav-arrow" id="report-next" title="다음 달">›</button>
+                </div>
+                <button class="btn-export-pdf" id="btn-export-pdf" title="PDF로 내보내기">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 12L3 7h3V1h4v6h3L8 12z"/>
+                        <path d="M14 14H2v-2H0v3c0 .6.4 1 1 1h14c.6 0 1-.4 1-1v-3h-2v2z"/>
+                    </svg>
+                    PDF 내보내기
+                </button>
+            </div>
+
+            <!-- A. 수치 요약 카드 4개 -->
+            <div class="report-summary" id="report-summary">
+                <div class="report-card">
+                    <span class="report-card-label">이번 달 지출</span>
+                    <span class="report-card-value" id="rpt-month-expense">0원</span>
+                </div>
+                <div class="report-card">
+                    <span class="report-card-label">지난 달 대비</span>
+                    <span class="report-card-value" id="rpt-vs-last">-</span>
+                </div>
+                <div class="report-card">
+                    <span class="report-card-label">일 평균 지출</span>
+                    <span class="report-card-value" id="rpt-daily-avg">0원</span>
+                </div>
+                <div class="report-card">
+                    <span class="report-card-label">가장 많이 쓴 곳</span>
+                    <span class="report-card-value" id="rpt-top-cat">-</span>
+                </div>
+            </div>
+
+            <!-- B. 일별 지출 추이 막대 차트 + D. 지난 달 비교 -->
+            <div class="report-charts">
+                <div class="report-chart-box">
+                    <h3 class="report-subtitle">일별 지출 추이</h3>
+                    <div class="report-chart-wrapper">
+                        <canvas id="daily-bar-chart"></canvas>
+                    </div>
+                </div>
+                <div class="report-chart-box">
+                    <h3 class="report-subtitle">지난 달 vs 이번 달</h3>
+                    <div class="report-chart-wrapper">
+                        <canvas id="compare-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- C. 카테고리별 지출 랭킹 (가로 막대) -->
+            <div class="report-ranking" id="report-ranking">
+                <h3 class="report-subtitle">카테고리별 지출 랭킹</h3>
+                <div class="ranking-list" id="ranking-list">
+                    <!-- JS에서 동적 생성 -->
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ==================== 카테고리 관리 모달 ==================== -->
+    <!-- 배경 오버레이를 클릭하면 모달이 닫힘 -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="category-modal">
+
+            <!-- 모달 헤더: 제목 + 닫기 버튼 -->
+            <div class="modal-header">
+                <h3>카테고리 관리</h3>
+                <button class="modal-close" id="modal-close">×</button>
+            </div>
+
+            <!-- 수입/지출 탭 전환 -->
+            <div class="modal-tabs">
+                <button class="modal-tab active" data-tab="expense">지출 카테고리</button>
+                <button class="modal-tab" data-tab="income">수입 카테고리</button>
+            </div>
+
+            <!-- 새 카테고리 추가 안내 + 폼 -->
+            <p class="modal-add-hint">이모지, 이름, <span class="hint-chart-color">●</span> 차트 색상을 지정해 새 카테고리를 만드세요</p>
+            <div class="modal-add-form">
+                <!-- 이모지 선택 버튼: 클릭하면 이모지 피커가 열림 -->
+                <button type="button" class="cat-icon-btn" id="new-cat-icon-btn" title="이모지 선택">
+                    <span class="cat-icon-preview" id="new-cat-icon-preview">+</span>
+                </button>
+                <!-- 선택된 이모지를 저장하는 숨겨진 input -->
+                <input type="hidden" id="new-cat-icon">
+                <input type="text" id="new-cat-name" class="cat-name-input" placeholder="카테고리 이름">
+                <!-- 차트 색상 선택 버튼: 클릭하면 색상 팔레트가 열림 -->
+                <button type="button" class="cat-color-btn" id="new-cat-color-btn" title="차트 색상 선택">
+                    <span class="cat-color-dot" id="new-cat-color-dot" style="background:#6c5ce7;"></span>
+                </button>
+                <input type="hidden" id="new-cat-color" value="#6c5ce7">
+                <button class="btn-add-cat" id="btn-add-cat">+ 추가</button>
+            </div>
+
+            <!-- 카테고리 목록 (JS에서 동적으로 채워짐) -->
+            <div class="modal-cat-list" id="modal-cat-list">
+                <!-- 카테고리 아이템들이 여기에 렌더링됨 -->
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ==================== 이모지 피커 팝업 ==================== -->
+    <!-- 이모지 입력 버튼을 클릭하면 이 피커가 해당 버튼 근처에 나타남 -->
+    <div class="emoji-picker" id="emoji-picker">
+        <!-- 카테고리 탭 (JS에서 동적으로 생성) -->
+        <div class="emoji-tabs" id="emoji-tabs"></div>
+        <!-- 이모지 그리드 (JS에서 동적으로 생성) -->
+        <div class="emoji-grid" id="emoji-grid"></div>
+    </div>
+
+    <!-- ==================== 월 선택 드롭다운 ==================== -->
+    <!-- 월별 보기에서 "2026년 3월" 라벨을 클릭하면 나타나는 월 선택기 -->
+    <div class="month-dropdown" id="month-dropdown">
+        <div class="month-dropdown-year">
+            <button class="nav-arrow" id="dropdown-year-prev">‹</button>
+            <span id="dropdown-year-label">2026년</span>
+            <button class="nav-arrow" id="dropdown-year-next">›</button>
+        </div>
+        <div class="month-grid" id="month-grid">
+            <!-- JS에서 1월~12월 버튼을 동적 생성 -->
+        </div>
+    </div>
+
+    <!-- ==================== 색상 팔레트 피커 팝업 ==================== -->
+    <!-- 차트 색상 버튼을 클릭하면 이 팔레트가 나타남 -->
+    <div class="color-picker" id="color-picker">
+        <div class="color-picker-label">차트에 표시될 색상</div>
+        <div class="color-palette" id="color-palette">
+            <!-- JS에서 색상 스와치를 동적으로 생성 -->
+        </div>
+    </div>
+
+    <!-- 메인 JavaScript 파일 -->
+    <script src="app.js"></script>
+</body>
+</html>
