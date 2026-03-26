@@ -161,6 +161,8 @@ const DOM = {
     totalExpense:       document.getElementById('total-expense'),
     totalBalance:       document.getElementById('total-balance'),
     cumulativeBalance:  document.getElementById('cumulative-balance'),
+    btnExportJson:      document.getElementById('btn-export-json'),
+    importFileInput:    document.getElementById('import-file-input'),
     transactionList: document.getElementById('transaction-list'),
     listEmpty:       document.getElementById('list-empty'),
     chartEmpty:      document.getElementById('chart-empty'),
@@ -2081,6 +2083,95 @@ DOM.newCatName.addEventListener('keydown', (e) => {
         e.preventDefault();
         addCustomCategory();
     }
+});
+
+// ============================================================
+// 12-1. 데이터 백업 (JSON 내보내기 / 불러오기)
+// ============================================================
+
+/**
+ * 현재 거래 내역 + 커스텀 카테고리를 JSON 파일로 다운로드
+ * - 파일명: "가계부백업_2026-03-26.json" 형식
+ */
+DOM.btnExportJson.addEventListener('click', () => {
+    const backup = {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        transactions,
+        customCategories: JSON.parse(localStorage.getItem(CUSTOM_CAT_KEY) || '{}'),
+    };
+
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    const dateStr = toLocalDateStr(new Date());
+    a.download = `가계부백업_${dateStr}.json`;
+    a.click();
+
+    URL.revokeObjectURL(url);
+});
+
+/**
+ * JSON 백업 파일을 불러와서 데이터 복원
+ * - 기존 데이터를 덮어쓰기 전에 사용자에게 확인 요청
+ */
+DOM.importFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            const backup = JSON.parse(ev.target.result);
+
+            // 기본 유효성 검사
+            if (!Array.isArray(backup.transactions)) {
+                alert('올바른 백업 파일이 아닙니다.');
+                return;
+            }
+
+            const count = backup.transactions.length;
+            const confirmed = confirm(
+                `백업 파일에 거래 내역 ${count}건이 있습니다.\n` +
+                `현재 데이터를 이 파일로 교체하시겠습니까?\n\n` +
+                `(기존 데이터는 사라집니다)`
+            );
+            if (!confirmed) return;
+
+            // 거래 내역 복원
+            transactions.length = 0;
+            backup.transactions.forEach(tx => transactions.push(tx));
+            saveTransactions();
+
+            // 커스텀 카테고리 복원 (있을 경우)
+            if (backup.customCategories && typeof backup.customCategories === 'object') {
+                localStorage.setItem(CUSTOM_CAT_KEY, JSON.stringify(backup.customCategories));
+                // 카테고리 전역 변수 갱신
+                const saved = localStorage.getItem(CUSTOM_CAT_KEY);
+                const parsed = saved ? JSON.parse(saved) : {};
+                Object.keys(customCategories).forEach(k => delete customCategories[k]);
+                Object.assign(customCategories, parsed);
+            }
+
+            // 화면 전체 갱신
+            rebuildCategories();
+            populateCategories();
+            updateSummary();
+            renderTransactions();
+            updateChart();
+            updateReport();
+
+            alert(`✅ ${count}건의 데이터를 성공적으로 불러왔습니다.`);
+        } catch {
+            alert('파일을 읽는 중 오류가 발생했습니다.\nJSON 형식이 올바른지 확인해주세요.');
+        } finally {
+            // 같은 파일을 다시 선택할 수 있도록 input 초기화
+            e.target.value = '';
+        }
+    };
+    reader.readAsText(file);
 });
 
 // ============================================================

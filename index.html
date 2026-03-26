@@ -24,6 +24,27 @@
     <header class="app-header">
         <h1>💰 비주얼 가계부</h1>
         <p class="subtitle">수입과 지출을 한눈에 관리하세요</p>
+
+        <!-- 데이터 백업 / 불러오기 버튼 -->
+        <div class="backup-bar">
+            <button class="btn-backup" id="btn-export-json">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 12L3 7h3V1h4v6h3L8 12z"/>
+                    <path d="M14 14H2v-2H0v3c0 .6.4 1 1 1h14c.6 0 1-.4 1-1v-3h-2v2z"/>
+                </svg>
+                데이터 백업
+            </button>
+            <!-- 실제 파일 선택은 숨겨진 input이 담당, 버튼 클릭 시 트리거 -->
+            <label class="btn-backup btn-import" for="import-file-input">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 4L13 9h-3v6H6V9H3L8 4z"/>
+                    <path d="M14 14H2v-2H0v3c0 .6.4 1 1 1h14c.6 0 1-.4 1-1v-3h-2v2z"/>
+                </svg>
+                데이터 불러오기
+            </label>
+            <input type="file" id="import-file-input" accept=".json" style="display:none">
+        </div>
+        <p class="backup-warning">⚠️ 데이터 백업을 하지 않으면, 인터넷 기록을 지울 경우 데이터가 모두 사라져요!</p>
     </header>
 
     <main class="container">
